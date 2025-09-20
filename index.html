@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrendzShop</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Custom Styles -->
+    <style>
+        /* Applying the Inter font family for a clean, modern look */
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Custom scrollbar for a polished feel */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #a8a8a8;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        
+        /* Added a subtle transition for smoother interactions */
+        .transition-all {
+            transition: all 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- Main Application Container -->
+    <div id="app-container" class="flex flex-col min-h-screen">
+
+        <!-- Header Section -->
+        <header class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-40">
+            <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-20">
+                    <!-- Logo -->
+                    <div class="flex-shrink-0">
+                        <a href="#" onclick="app.navigateTo('home')" class="flex items-center space-x-2 text-2xl font-bold text-gray-800">
+                             <svg class="h-8 w-8 text-teal-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-2.25-1.313M21 7.5v2.25m0-2.25l-2.25 1.313M3 7.5l2.25-1.313M3 7.5l2.25 1.313M3 7.5v2.25m9 3l2.25-1.313M12 12.75l-2.25-1.313M12 12.75V15m0 6.75l2.25-1.313M12 21.75V19.5m0 2.25l-2.25-1.313m0-16.875L12 2.25l2.25 1.313M12 2.25l-2.25 1.313m16.5 7.5l-2.25 1.313M12 15.75l-2.25 1.313M12 15.75l2.25 1.313m4.5-1.313l-2.25-1.313M6.75 15.75l-2.25-1.313M12 19.5l-2.25-1.313M12 19.5l2.25-1.313" />
+                            </svg>
+                            <span>TrendzShop</span>
+                        </a>
+                    </div>
+                    <!-- Desktop Navigation -->
+                    <div class="hidden md:block">
+                        <div class="ml-10 flex items-baseline space-x-6">
+                            <a href="#" onclick="app.navigateTo('home')" class="nav-link text-gray-600 hover:text-teal-600 px-3 py-2 rounded-md text-sm font-medium transition-all">Home</a>
+                            <a href="#" onclick="app.navigateTo('shop')" class="nav-link text-gray-600 hover:text-teal-600 px-3 py-2 rounded-md text-sm font-medium transition-all">Shop</a>
+                            <a href="#" onclick="app.navigateTo('about')" class="nav-link text-gray-600 hover:text-teal-600 px-3 py-2 rounded-md text-sm font-medium transition-all">About</a>
+                        </div>
+                    </div>
+                    <!-- Mobile Menu Button -->
+                    <div class="md:hidden flex items-center">
+                        <button id="mobile-menu-button" class="text-gray-600 hover:text-gray-900 p-2 rounded-md">
+                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </nav>
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="md:hidden hidden bg-white border-t">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#" onclick="app.navigateTo('home')" class="nav-link text-gray-600 hover:text-gray-900 hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium">Home</a>
+                    <a href="#" onclick="app.navigateTo('shop')" class="nav-link text-gray-600 hover:text-gray-900 hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium">Shop</a>
+                    <a href="#" onclick="app.navigateTo('about')" class="nav-link text-gray-600 hover:text-gray-900 hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium">About</a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content: Dynamically rendered based on the current page -->
+        <main id="app-root" class="flex-grow"></main>
+
+        <!-- Footer Section -->
+        <footer class="bg-gray-800 text-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-10">
+                <div class="flex flex-col md:flex-row justify-between items-center text-center md:text-left space-y-4 md:space-y-0">
+                    <p class="text-sm text-gray-400">&copy; <span id="footer-year"></span> TrendzShop. All rights reserved.</p>
+                    <div class="flex space-x-6 text-sm">
+                        <a href="#" onclick="app.navigateTo('privacy')" class="hover:text-teal-400 transition-all">Privacy Policy</a>
+                        <a href="#" onclick="app.navigateTo('terms')" class="hover:text-teal-400 transition-all">Terms of Service</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    <!-- Address Modal: Hidden by default, appears when buying a product -->
+    <div id="address-modal" class="hidden fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-4 transition-opacity duration-300">
+        <div class="bg-white rounded-lg shadow-2xl p-6 md:p-8 w-full max-w-md max-h-[90vh] overflow-y-auto transform transition-all duration-300 scale-95 opacity-0">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Delivery Address</h2>
+                <button id="close-modal-button" class="text-gray-400 hover:text-gray-800 text-3xl font-light">&times;</button>
+            </div>
+            <form id="address-form" noValidate class="space-y-4"></form>
+        </div>
+    </div>
+
+    <script>
+        // --- APPLICATION LOGIC ---
+        const app = (() => {
+            // --- DATA & CONFIGURATION ---
+            const WHATSAPP_NUMBER = '918858461629'; // Replace with your WhatsApp number
+            const BRAND_COLOR = 'teal'; // Easily change the brand color
+
+            // Centralized theme classes for consistency
+            const themeClasses = {
+                bg: `bg-${BRAND_COLOR}-600`,
+                hoverBg: `hover:bg-${BRAND_COLOR}-700`,
+                text: `text-${BRAND_COLOR}-600`,
+                border: `border-${BRAND_COLOR}-500`,
+                ring: `focus:ring-${BRAND_COLOR}-500`,
+                focusBorder: `focus:border-${BRAND_COLOR}-500`,
+                gradientFrom: `from-${BRAND_COLOR}-50`,
+                gradientTo: `to-white`,
+            };
+            
+            // Product data - using working image URLs from original code
+            const products = [{
+                id: 1,
+                name: 'Cute Panda Silicone Night Lamp',
+                price: 439.00,
+                rating: 4.8,
+                reviewCount: 132,
+                images: [
+                    'https://i.imgur.com/gS2a7fN.jpeg', // Main image
+                    'https://i.imgur.com/K0S225N.jpeg', // Lifestyle image
+                    'https://i.imgur.com/C1m10yL.jpeg', // Brightness levels
+                    'https://i.imgur.com/KmM251N.jpeg', // In hand
+                ],
+                description: "Light up your life with this adorable and squishy Panda Night Lamp. Made from soft, BPA-free silicone, it's safe for all ages and provides a gentle, calming glow. Perfect for bedrooms, nurseries, or as a cute desk companion. Simply tap it to change brightness levels!",
+                specifications: [
+                    { name: 'Material', value: 'BPA-Free Soft Silicone + ABS' },
+                    { name: 'Dimensions', value: '5.1" x 4.5" x 4.5"' },
+                    { name: 'Light Source', value: 'LED' },
+                    { name: 'Brightness Levels', value: '3 (Soft, Medium, Bright)' },
+                    { name: 'Battery', value: '1200mAh Rechargeable' },
+                    { name: 'Charging', value: 'USB-C (Cable included)' },
+                ],
+                reviews: [
+                    { id: 1, author: 'ayushikesarwani.', rating: 5, date: 'Aug 15, 2025', text: "So cute and soft! My daughter absolutely loves it. The different brightness levels are perfect." },
+                    { id: 2, author: 'Anoop Kumar.', rating: 5, date: 'Aug 12, 2025', text: "Excellent build quality and the battery life is surprisingly good. It's a great little lamp." },
+                    { id: 3, author: 'Anjali Kesaewani.', rating: 4, date: 'Aug 10, 2025', text: "Very adorable product. I wish it had more color options, but the warm white is very soothing." },
+                ],
+            }];
+
+            // --- GLOBAL STATE ---
+            let state = {
+                currentPage: 'home',
+                selectedProductId: null,
+                quantity: 1
+            };
+
+            // --- DOM ELEMENT CACHING ---
+            const dom = {};
+            
+            // --- HELPER FUNCTIONS ---
+            /**
+             * Generates HTML for a star rating display.
+             * @param {number} rating - The rating value (e.g., 4.5).
+             * @returns {string} - The HTML string for the stars.
+             */
+            const createStarRatingHTML = (rating) => {
+                let starsHTML = '';
+                for (let i = 1; i <= 5; i++) {
+                    if (i <= rating) {
+                        starsHTML += `<svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>`;
+                    } else {
+                        starsHTML += `<svg class="w-5 h-5 text-gray-300" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>`;
+                    }
+                }
+                return `<div class="flex items-center">${starsHTML}</div>`;
+            };
+
+            // --- PAGE RENDERING FUNCTIONS ---
+            
+            /** Renders the Home Page content into the app root. */
+            const renderHomePage = () => {
+                const heroProduct = products[0];
+                dom.appRoot.innerHTML = `
+                    <!-- Hero Section -->
+                    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                        <div class="bg-gradient-to-br ${themeClasses.gradientFrom} ${themeClasses.gradientTo} rounded-2xl shadow-lg overflow-hidden">
+                            <div class="md:flex">
+                                <div class="md:w-1/2 p-4">
+                                     <img class="h-64 w-full object-cover rounded-xl md:h-full" src="/51jU5f4NteL._UF1000,1000_QL80_.jpg" alt="Panda Night Lamp in a room">
+                                </div>
+                                <div class="p-8 md:p-12 md:w-1/2 flex flex-col justify-center text-center md:text-left">
+                                    <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight">Your All-Night Companion</h1>
+                                    <p class="mt-4 text-lg text-gray-600">This cute panda night light will soothe your child, lulling them to sleep and into a wonderful dream!</p>
+                                    <div class="mt-8">
+                                        <button onclick="app.navigateTo('product', ${heroProduct.id})" class="w-full md:w-auto inline-block ${themeClasses.bg} text-white font-bold py-3 px-8 rounded-lg ${themeClasses.hoverBg} transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-lg">
+                                            Shop Now
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Features Section -->
+                    <div class="bg-white py-16">
+                        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                            <div class="text-center mb-12">
+                                <h2 class="text-3xl font-extrabold text-gray-900">Why You'll Love It</h2>
+                                <p class="mt-2 text-gray-500">The perfect blend of cuteness and functionality.</p>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-10 text-center">
+                                <div class="p-6">
+                                    <div class="flex items-center justify-center h-16 w-16 rounded-full bg-teal-100 text-teal-600 mx-auto mb-4">
+                                        <!-- Icon: Hand -->
+                                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                                    </div>
+                                    <h3 class="text-xl font-semibold">Soft & Squishy</h3>
+                                    <p class="mt-2 text-gray-600">Made from safe, BPA-free silicone that's fun to touch and completely child-safe.</p>
+                                </div>
+                                <div class="p-6">
+                                     <div class="flex items-center justify-center h-16 w-16 rounded-full bg-teal-100 text-teal-600 mx-auto mb-4">
+                                        <!-- Icon: Sparkles -->
+                                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
+                                    </div>
+                                    <h3 class="text-xl font-semibold">Adjustable Light</h3>
+                                    <p class="mt-2 text-gray-600">Three brightness levels to create the perfect soothing atmosphere for sleep or play.</p>
+                                </div>
+                                <div class="p-6">
+                                     <div class="flex items-center justify-center h-16 w-16 rounded-full bg-teal-100 text-teal-600 mx-auto mb-4">
+                                        <!-- Icon: Battery -->
+                                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    </div>
+                                    <h3 class="text-xl font-semibold">Long Battery Life</h3>
+                                    <p class="mt-2 text-gray-600">Rechargeable via USB-C for hours of continuous, worry-free glow.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            };
+            
+            /** Renders the Shop Page with all available products. */
+            const renderShopPage = () => {
+                const productsHTML = products.map(product => `
+                    <div onclick="app.navigateTo('product', ${product.id})" class="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer transform hover:-translate-y-2 transition-all group">
+                        <div class="h-64 overflow-hidden relative">
+                            <img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src="/61V0gAkh2SL._UF1000,1000_QL80_.jpg" alt="${product.name}">
+                        </div>
+                        <div class="p-5">
+                            <h3 class="text-lg font-semibold text-gray-800 group-hover:text-teal-600 truncate">${product.name}</h3>
+                            <div class="flex items-center mt-2">
+                                ${createStarRatingHTML(product.rating)}
+                                <span class="text-sm text-gray-500 ml-2">(${product.reviewCount} reviews)</span>
+                            </div>
+                            <p class="mt-3 text-xl font-bold text-gray-900">₹${product.price.toFixed(2)}</p>
+                        </div>
+                    </div>
+                `).join('');
+
+                dom.appRoot.innerHTML = `
+                    <div class="bg-gray-50">
+                        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                            <h2 class="text-3xl font-extrabold text-gray-900 mb-10 text-center">Our Products</h2>
+                            <div class="grid grid-cols-1 sm:grid
+                                ${productsHTML}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            };
+
+            /** Renders the detailed view for a single product. */
+            const renderProductDetailPage = () => {
+                const product = products.find(p => p.id === state.selectedProductId);
+                if (!product) {
+                    dom.appRoot.innerHTML = '<p class="text-center py-12">Product not found.</p>';
+                    return;
+                }
+
+                const specificationsHTML = product.specifications.map(spec => `
+                    <li class="flex justify-between py-2 border-b border-gray-200">
+                        <span class="font-medium text-gray-600">${spec.name}</span>
+                        <span class="text-gray-800">${spec.value}</span>
+                    </li>
+                `).join('');
+
+                const reviewsHTML = product.reviews.map(review => `
+                    <div class="bg-white p-5 rounded-lg border">
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center font-bold text-gray-600 mr-4 flex-shrink-0">${review.author.charAt(0)}</div>
+                            <div>
+                                <div class="flex flex-col sm:flex-row sm:items-center">
+                                    <p class="font-semibold text-gray-800">${review.author}</p>
+                                    <div class="ml-0 sm:ml-4 mt-1 sm:mt-0">${createStarRatingHTML(review.rating)}</div>
+                                </div>
+                                <p class="text-sm text-gray-500">${review.date}</p>
+                                <p class="mt-2 text-gray-700 leading-relaxed">${review.text}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                const thumbnailsHTML = `
+    <img src="/61V0gAkh2SL._UF1000,1000_QL80_.jpg"  alt="Thumbnail 1" 
+        class="thumbnail-img w-full h-auto object-cover rounded-md cursor-pointer border-2 ${themeClasses.border} opacity-100">
+`;
+                
+                dom.appRoot.innerHTML = `
+
+                                </div>
+                                <div class=" gap-0">${thumbnailsHTML}</div>
+                            </div>
+
+                            <!-- Product Info -->
+                            <div>
+                                <h1 class="text-3xl md:text-4xl font-bold text-gray-900">${product.name}</h1>
+                                <div class="flex items-center mt-3">
+                                    ${createStarRatingHTML(product.rating)}
+                                    <a href="#reviews" class="text-md text-gray-600 hover:text-teal-600 ml-3">(${product.reviewCount} reviews)</a>
+                                </div>
+                                <p class="mt-4 text-3xl font-bold text-gray-800">₹${product.price.toFixed(2)}</p>
+                                <p class="mt-6 text-gray-700 leading-relaxed">${product.description}</p>
+                                
+                                <div class="mt-8 bg-white p-6 rounded-lg border">
+                                    <div class="flex items-center space-x-4 mb-6">
+                                        <label for="quantity" class="font-semibold text-gray-700">Quantity:</label>
+                                        <div class="flex items-center border border-gray-300 rounded-md">
+                                            <button id="decrease-qty" class="px-3 py-1 text-lg font-bold text-gray-600 hover:bg-gray-100 rounded-l-md transition-colors">-</button>
+                                            <input type="number" id="quantity-input" value="${state.quantity}" readonly class="w-12 text-center border-l border-r border-gray-300 bg-white focus:outline-none">
+                                            <button id="increase-qty" class="px-3 py-1 text-lg font-bold text-gray-600 hover:bg-gray-100 rounded-r-md transition-colors">+</button>
+                                        </div>
+                                    </div>
+                                    <button id="buy-button" class="w-full flex justify-center items-center gap-2 ${themeClasses.bg} text-white font-bold py-3 px-6 rounded-lg ${themeClasses.hoverBg} transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-lg">
+                                        Buy on WhatsApp
+                                    </button>
+                                </div>
+
+                                <div class="mt-10">
+                                    <h3 class="text-xl font-semibold text-gray-900 border-b pb-2">Specifications</h3>
+                                    <ul class="mt-4 space-y-1 text-gray-600">${specificationsHTML}</ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="reviews" class="mt-16">
+                            <h2 class="text-2xl font-bold text-gray-900 border-b pb-3 mb-6">Customer Reviews</h2>
+                            <div class="space-y-6">${reviewsHTML}</div>
+                        </div>
+                    </div>
+                `;
+                initProductDetailPageListeners();
+                initImageGallery();
+            };
+
+            const renderPolicyPage = (type) => {
+                 const content = {
+                    'privacy': { title: 'Privacy Policy', text: 'This is a placeholder for your Privacy Policy. You should detail how you collect, use, and protect customer data. Since you are using WhatsApp for orders, you should mention that order details are processed through WhatsApp. It is crucial to be transparent about data handling to build trust with your customers. Consult a legal professional to draft a proper policy.' },
+                    'terms': { title: 'Terms of Service', text: 'This is a placeholder for your Terms of Service. This section should outline the rules and guidelines for using your website. Include information about product purchases, returns (if any), shipping, and user responsibilities. A clear Terms of Service page can help prevent disputes and manage customer expectations. Consult a legal professional for a comprehensive document.' }
+                };
+                const { title, text } = content[type];
+                dom.appRoot.innerHTML = `
+                    <div class="bg-white">
+                        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                            <div class="max-w-3xl mx-auto">
+                                <h1 class="text-3xl font-extrabold text-gray-900 mb-6">${title}</h1>
+                                <div class="prose lg:prose-xl text-gray-700 space-y-4">
+                                    <p>${text}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            };
+            
+            const renderAboutPage = () => {
+                dom.appRoot.innerHTML = `
+                 <div class="bg-white">
+                    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-20">
+                        <div class="max-w-3xl mx-auto text-center">
+                            <h1 class="text-4xl font-extrabold text-gray-900">About TrendzShop</h1>
+                            <p class="mt-4 text-lg text-gray-600">Welcome to TrendzShop, your one-stop shop for the cutest and most delightful products. We believe in spreading joy through high-quality, adorable items that bring a smile to your face. Our flagship product, the Panda Silicone Night Lamp, is just the beginning.</p>
+                            <div class="mt-8">
+                                <a href="https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Hello! I have a question about TrendzShop.')}" target="_blank" rel="noopener noreferrer" class="inline-block ${themeClasses.bg} text-white font-bold py-3 px-8 rounded-lg ${themeClasses.hoverBg} transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                                    Contact Us
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                 </div>
+                `;
+            };
+
+            // --- NAVIGATION & ROUTING ---
+            
+            /** * Main navigation function to switch between pages.
+             * @param {string} page - The key of the page to navigate to.
+             * @param {number|null} productId - The ID of the product for detail pages.
+             */
+            const navigateTo = (page, productId = null) => {
+                state.currentPage = page;
+                state.selectedProductId = productId;
+                state.quantity = 1; // Reset quantity on page change
+                window.scrollTo(0, 0);
+                dom.mobileMenu.classList.add('hidden');
+                
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.classList.toggle('text-teal-600', link.getAttribute('onclick').includes(`'${page}'`));
+                    link.classList.toggle('text-gray-600', !link.getAttribute('onclick').includes(`'${page}'`));
+                });
+                render();
+            };
+            
+            /** Main render function that calls the appropriate page renderer based on state. */
+            const render = () => {
+                switch(state.currentPage) {
+                    case 'shop': renderShopPage(); break;
+                    case 'product': renderProductDetailPage(); break;
+                    case 'about': renderAboutPage(); break;
+                    case 'privacy': renderPolicyPage('privacy'); break;
+                    case 'terms': renderPolicyPage('terms'); break;
+                    case 'home':
+                    default: renderHomePage();
+                }
+            };
+            
+            // --- EVENT LISTENERS & INITIALIZATION ---
+            
+            /** Initializes event listeners for the product detail page. */
+            const initProductDetailPageListeners = () => {
+                document.getElementById('increase-qty').addEventListener('click', () => {
+                    state.quantity++;
+                    document.getElementById('quantity-input').value = state.quantity;
+                });
+                document.getElementById('decrease-qty').addEventListener('click', () => {
+                    state.quantity = Math.max(1, state.quantity - 1);
+                    document.getElementById('quantity-input').value = state.quantity;
+                });
+                document.getElementById('buy-button').addEventListener('click', openAddressModal);
+            };
+
+            /** Initializes the interactive image gallery on the product detail page. */
+            const initImageGallery = () => {
+                const product = products.find(p => p.id === state.selectedProductId);
+                let currentIndex = 0;
+                const mainImage = document.getElementById('main-image');
+                const thumbnails = document.querySelectorAll('.thumbnail-img');
+
+                const updateGallery = (index) => {
+                    if (index === currentIndex) return;
+                    mainImage.style.opacity = 0;
+                    setTimeout(() => {
+                        mainImage.src = product.images[index];
+                        mainImage.style.opacity = 1;
+                    }, 200);
+                    
+                    thumbnails.forEach((thumb, i) => {
+                        thumb.classList.toggle(`${themeClasses.border}`, i === index);
+                        thumb.classList.toggle('opacity-100', i === index);
+                        thumb.classList.toggle('border-transparent', i !== index);
+                        thumb.classList.toggle('opacity-60', i !== index);
+                    });
+                    currentIndex = index;
+                }
+
+                thumbnails.forEach(thumb => {
+                    thumb.addEventListener('click', () => updateGallery(parseInt(thumb.dataset.index, 10)));
+                });
+            };
+            
+            // --- ADDRESS MODAL LOGIC ---
+            
+            const openAddressModal = () => {
+                renderAddressForm();
+                const savedAddress = localStorage.getItem('deliveryAddress');
+                if (savedAddress) {
+                    const data = JSON.parse(savedAddress);
+                    Object.keys(data).forEach(key => {
+                        if (dom.addressForm.elements[key]) dom.addressForm.elements[key].value = data[key];
+                    });
+                }
+                dom.addressModal.classList.remove('hidden');
+                setTimeout(() => {
+                    dom.addressModal.firstElementChild.classList.remove('scale-95', 'opacity-0');
+                }, 10);
+            };
+            
+            const closeAddressModal = () => {
+                dom.addressModal.firstElementChild.classList.add('scale-95', 'opacity-0');
+                 setTimeout(() => {
+                    dom.addressModal.classList.add('hidden');
+                }, 300);
+            };
+
+            const renderAddressForm = () => {
+                dom.addressForm.innerHTML = `
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+                        <input type="text" id="name" name="name" autocomplete="name" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none ${themeClasses.ring} ${themeClasses.focusBorder} sm:text-sm">
+                        <p class="error-msg mt-1 text-xs text-red-600 hidden"></p>
+                    </div>
+                    <div>
+                        <label for="contact" class="block text-sm font-medium text-gray-700">Contact Number</label>
+                        <input type="tel" id="contact" name="contact" autocomplete="tel" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none ${themeClasses.ring} ${themeClasses.focusBorder} sm:text-sm">
+                        <p class="error-msg mt-1 text-xs text-red-600 hidden"></p>
+                    </div>
+                    <div>
+                        <label for="house" class="block text-sm font-medium text-gray-700">House / Building</label>
+                        <input type="text" id="house" name="house" autocomplete="address-line1" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none ${themeClasses.ring} ${themeClasses.focusBorder} sm:text-sm">
+                        <p class="error-msg mt-1 text-xs text-red-600 hidden"></p>
+                    </div>
+                    <div>
+                        <label for="area" class="block text-sm font-medium text-gray-700">Road / Area</label>
+                        <input type="text" id="area" name="area" autocomplete="address-line2" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none ${themeClasses.ring} ${themeClasses.focusBorder} sm:text-sm">
+                        <p class="error-msg mt-1 text-xs text-red-600 hidden"></p>
+                    </div>
+                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label for="pincode" class="block text-sm font-medium text-gray-700">Pincode</label>
+                            <input type="tel" id="pincode" name="pincode" maxlength="6" autocomplete="postal-code" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none ${themeClasses.ring} ${themeClasses.focusBorder} sm:text-sm">
+                            <p class="error-msg mt-1 text-xs text-red-600 hidden"></p>
+                        </div>
+                         <div>
+                            <label for="city" class="block text-sm font-medium text-gray-700">City</label>
+                            <input type="text" id="city" name="city" autocomplete="address-level2" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none ${themeClasses.ring} ${themeClasses.focusBorder} sm:text-sm">
+                            <p class="error-msg mt-1 text-xs text-red-600 hidden"></p>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="state" class="block text-sm font-medium text-gray-700">State</label>
+                        <input type="text" id="state" name="state" autocomplete="address-level1" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none ${themeClasses.ring} ${themeClasses.focusBorder} sm:text-sm">
+                        <p class="error-msg mt-1 text-xs text-red-600 hidden"></p>
+                    </div>
+                    <div class="mt-6">
+                        <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-white ${themeClasses.bg} ${themeClasses.hoverBg} focus:outline-none focus:ring-2 focus:ring-offset-2 ${themeClasses.ring} transition-all">Confirm and Order</button>
+                    </div>
+                `;
+            };
+
+            const showError = (field, message) => {
+                const el = dom.addressForm.elements[field];
+                el.classList.add('border-red-500');
+                const errorEl = el.nextElementSibling;
+                errorEl.textContent = message;
+                errorEl.classList.remove('hidden');
+            };
+
+            const clearError = (field) => {
+                const el = dom.addressForm.elements[field];
+                el.classList.remove('border-red-500');
+                el.nextElementSibling.classList.add('hidden');
+            };
+
+            const handleAddressSubmit = (e) => {
+                e.preventDefault();
+                let isValid = true;
+                const data = {};
+                
+                ['name', 'contact', 'house', 'area', 'pincode', 'city', 'state'].forEach(field => {
+                    clearError(field);
+                    const value = dom.addressForm.elements[field].value.trim();
+                    data[field] = value;
+                    if (!value) {
+                        showError(field, `${field.charAt(0).toUpperCase() + field.slice(1)} is required`);
+                        isValid = false;
+                    } else if (field === 'contact' && !/^\d{10}$/.test(value)) {
+                        showError(field, 'Must be a 10-digit number');
+                        isValid = false;
+                    } else if (field === 'pincode' && !/^\d{6}$/.test(value)) {
+                        showError(field, 'Must be a 6-digit pincode');
+                        isValid = false;
+                    }
+                });
+
+                if (isValid) {
+                    localStorage.setItem('deliveryAddress', JSON.stringify(data));
+                    const product = products.find(p => p.id === state.selectedProductId);
+                    const orderDetails = `*Order Request*\n\n*Product:* ${product.name}\n*Quantity:* ${state.quantity}\n*Total Price:* ₹${(product.price * state.quantity).toFixed(2)}`;
+                    const addressDetails = `\n\n*Delivery Address:*\n${data.name}\n${data.contact}\n${data.house}, ${data.area}\n${data.city}, ${data.state} - ${data.pincode}`;
+                    const message = encodeURIComponent(orderDetails + addressDetails + "\n\nPlease confirm payment and shipping details. Thank you!");
+                    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, '_blank');
+                    closeAddressModal();
+                }
+            };
+            
+            /** Initializes the entire application. */
+            const init = () => {
+                // Cache DOM elements
+                dom.appRoot = document.getElementById('app-root');
+                dom.addressModal = document.getElementById('address-modal');
+                dom.addressForm = document.getElementById('address-form');
+                dom.closeModalButton = document.getElementById('close-modal-button');
+                dom.mobileMenuButton = document.getElementById('mobile-menu-button');
+                dom.mobileMenu = document.getElementById('mobile-menu');
+                dom.footerYear = document.getElementById('footer-year');
+
+                // Set dynamic content
+                dom.footerYear.textContent = new Date().getFullYear();
+                
+                // Global event listeners
+                dom.closeModalButton.addEventListener('click', closeAddressModal);
+                dom.addressForm.addEventListener('submit', handleAddressSubmit);
+                dom.mobileMenuButton.addEventListener('click', () => dom.mobileMenu.classList.toggle('hidden'));
+
+                // Initial render
+                navigateTo('home');
+            };
+
+            return {
+                init,
+                navigateTo
+            };
+        })();
+
+        // Start the application once the DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', app.init);
+    </script>
+</body>
+</html>
